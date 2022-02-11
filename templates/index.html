@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+
+<body>
+    {% if current_user%}
+    <br>{%current_user.name%}<br>
+    <br>{%current_user.id%}<br>
+    <br>{{msg}}<br>
+
+    <form method="post" action="/mine">
+        <p>Mine</p>
+        <input type="submit" value="Submit">
+    </form>
+
+    <br><br>
+
+    <form method="post" action="/makepayment">
+        <p>Payment</p>
+        <label for="desc_transfer">desc_transfer</label><br>
+        <input type="text" id="desc_transfer" name="desc_transfer"><br>
+        <label for="transaction_amt">transaction_amt</label><br>
+        <input type="text" id="transaction_amt" name="transaction_amt"><br>
+        <label for="reciver_id">reciver_id</label><br>
+        <input type="text" id="reciver_id" name="reciver_id"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    {% else %}
+
+    <br>{{msg}}<br>
+    Blocks in the Chain<br>
+
+    {% for block in blocks %}
+        <br><br>
+        id : {{ block.id }}<br>
+        desc_transfer : {{ block.desc_transfer }}<br>
+        prev_hash : {{ block.prev_hash }} <br>
+        sender_id : {{ block.sender_id }} <br>
+        reciver_id : {{ block.reciver_id }} <br>
+        transaction_amt : {{ block.transaction_amt }} <br>
+        new_hash : {{ block.new_hash }} <br>
+        nonce : {{ block.nonce }} <br>
+        <br><br>
+    {% endfor %}
+
+    <br><br>
+    Current Tnxs<br>
+
+    {% for tnx in tnxs %}
+        <br><br>
+        id : {{ tnx.id }}<br>
+        desc_transfer : {{ tnx.desc_transfer }}<br>
+        sender_id : {{ tnx.sender_id }} <br>
+        reciver_id : {{ tnx.reciver_id }} <br>
+        transaction_amt : {{ tnx.transaction_amt }} <br>
+        <br><br>
+    {% endfor %}
+
+    {% endif %}
+
+    <script type="text/javascript">
+    
+        function post_data() {
+            var transaction_amt = document.getElementById("transaction_amt_id").value;
+            var prev_hash = document.getElementById("prev_hash_id").value;
+            var sender_id = document.getElementById("sender_id_id").value;
+            var reciver_id = document.getElementById("reciver_id_id").value;
+    
+            fetch("/mine", {
+    
+                method: "POST",
+    
+                body: JSON.stringify({
+                    "transaction_amt": transaction_amt,
+                    "prev_hash": prev_hash,
+                    "sender_id": sender_id,
+                    "reciver_id": reciver_id
+                }),
+    
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+    
+                .then(response => response.json())
+    
+                .then(json => console.log(json));
+        }
+    </script>
+
+</body>
+
+</html>
